@@ -1,5 +1,7 @@
 package hubspot
 
+import "fmt"
+
 // Deals client
 type Deals struct {
 	Client
@@ -30,11 +32,12 @@ type DealsProperty struct {
 // DealsResponse object
 type DealsResponse struct {
 	ErrorResponse
-	Id         string         `json:"id"`
-	Properties DealProperties `json:"properties"`
-	CreatedAt  string         `json:"createdAt"`
-	UpdatedAt  string         `json:"updatedAt"`
-	Archived   bool           `json:"archived"`
+	Id           string         `json:"id"`
+	Properties   DealProperties `json:"properties"`
+	CreatedAt    string         `json:"createdAt"`
+	UpdatedAt    string         `json:"updatedAt"`
+	Archived     bool           `json:"archived"`
+	Associations Associations   `json:"associations"`
 }
 
 // DealProperties object
@@ -52,26 +55,31 @@ type DealProperties struct {
 // Get Deal
 func (d Deals) Get(dealID string) (DealsResponse, error) {
 	r := DealsResponse{}
-	err := d.Client.Request("GET", "/crm/v3/objects/deals/"+dealID, nil, &r)
+	err := d.Client.Request("GET", fmt.Sprintf(
+		"/crm/v3/objects/deals/%s", dealID), nil, &r, []string{
+		"associations=contacts",
+		"associations=line_items",
+		"archived=false",
+	})
 	return r, err
 }
 
 // Create new Deal
 func (d Deals) Create(data DealsRequest) (DealsResponse, error) {
 	r := DealsResponse{}
-	err := d.Client.Request("POST", "/crm/v3/objects/deals", data, &r)
+	err := d.Client.Request("POST", "/crm/v3/objects/deals", data, &r, nil)
 	return r, err
 }
 
 // Update Deal
 func (d Deals) Update(dealID string, data DealsRequest) (DealsResponse, error) {
 	r := DealsResponse{}
-	err := d.Client.Request("PATCH", "/crm/v3/objects/deals/"+dealID, data, &r)
+	err := d.Client.Request("PATCH", "/crm/v3/objects/deals/"+dealID, data, &r, nil)
 	return r, err
 }
 
 // Delete Deal
 func (d Deals) Delete(dealID string) error {
-	err := d.Client.Request("DELETE", "/crm/v3/objects/deals/"+dealID, nil, nil)
+	err := d.Client.Request("DELETE", "/crm/v3/objects/deals/"+dealID, nil, nil, nil)
 	return err
 }

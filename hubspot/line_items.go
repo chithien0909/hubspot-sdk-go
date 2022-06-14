@@ -48,26 +48,26 @@ type LineItemResponse struct {
 // Get Line Items
 func (l LineItems) Get(lineItemId string) (LineItemResponse, error) {
 	r := LineItemResponse{}
-	err := l.Client.Request("GET", fmt.Sprintf("/crm/v3/objects/line_items/%v", lineItemId), nil, &r)
+	err := l.Client.Request("GET", fmt.Sprintf("/crm/v3/objects/line_items/%v", lineItemId), nil, &r, nil)
 	return r, err
 }
 
 // Create new Line Items
 func (l LineItems) Create(data LineItemsRequest) (LineItemsResponse, error) {
 	r := LineItemsResponse{}
-	err := l.Client.Request("POST", "/crm/v3/objects/line_items", data, &r)
+	err := l.Client.Request("POST", "/crm/v3/objects/line_items", data, &r, nil)
 	return r, err
 }
 
 // Update Line Items
 func (l LineItems) Update(lineItem string, data LineItemsRequest) (LineItemsResponse, error) {
 	r := LineItemsResponse{}
-	err := l.Client.Request("PATCH", "/crm/v3/objects/line_items/"+lineItem, data, &r)
+	err := l.Client.Request("PATCH", "/crm/v3/objects/line_items/"+lineItem, data, &r, nil)
 	return r, err
 }
 
 // Delete Deal
 func (l LineItems) Delete(lineItemId string) error {
-	err := l.Client.Request("DELETE", "/crm/v3/objects/line_items/"+lineItemId, nil, nil)
+	err := l.Client.Request("DELETE", "/crm/v3/objects/line_items/"+lineItemId, nil, nil, nil)
 	return err
 }

@@ -7,7 +7,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"path"
 	"time"
 )
@@ -24,23 +23,15 @@ type ClientConfig struct {
 
 // NewClientConfig constructs a ClientConfig object with the environment variables set as default
 func NewClientConfig(apiHost string, apiKey string) ClientConfig {
-	if apiKey == "" {
-		apiHost = "https://api.hubapi.com"
-		if os.Getenv("HUBSPOT_API_HOST") != "" {
-			apiHost = os.Getenv("HUBSPOT_API_HOST")
-		}
-		if os.Getenv("HUBSPOT_API_KEY") != "" {
-			apiKey = os.Getenv("HUBSPOT_API_KEY")
-		}
-	}
-
-	return ClientConfig{
+	r := ClientConfig{
 		APIHost:     apiHost,
 		APIKey:      apiKey,
+		OAuthToken:  "",
 		HTTPTimeout: 10 * time.Second,
 		DialTimeout: 5 * time.Second,
 		TLSTimeout:  5 * time.Second,
 	}
+	return r
 }
 
 // Client object
@@ -72,7 +63,7 @@ func (c Client) addAPIKey(u string) (string, error) {
 }
 
 // Request executes any HubSpot API method using the current client configuration
-func (c Client) Request(method, endpoint string, data, response interface{}) error {
+func (c Client) Request(method, endpoint string, data, response interface{}, params []string) error {
 	// Construct endpoint URL
 	u, err := url.Parse(c.config.APIHost)
 	if err != nil {
@@ -86,6 +77,11 @@ func (c Client) Request(method, endpoint string, data, response interface{}) err
 		uri, err = c.addAPIKey(uri)
 		if err != nil {
 			return fmt.Errorf("hubspot.Client.Request(): c.addAPIKey(): %v", err)
+		}
+	}
+	if len(params) > 0 {
+		for _, v := range params {
+			uri = uri + fmt.Sprintf("&%v", v)
 		}
 	}
 

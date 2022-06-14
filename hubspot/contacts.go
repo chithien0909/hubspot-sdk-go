@@ -37,15 +37,21 @@ type ContactsResponse struct {
 }
 
 type ContactsResponseProperty struct {
-	Company          string `json:"company" example:"Biglytics"`
-	Createdate       string `json:"createdate" example:"2019-10-30T03:30:17.883"`
-	Email            string `json:"email" example:"bcooper@biglytics.net"`
-	Firstname        string `json:"firstname" example:"Bryan"`
-	Lastname         string `json:"lastname" example:"Cooper"`
-	Lastmodifieddate string `json:"lastmodifieddate" example:"2019-12-07T16:50:06.678Z"`
-	Phone            string `json:"phone" example:"(877) 929-0687"`
-	Website          string `json:"website" example:"biglytics.net"`
-	ClassinAccountId string `json:"classin_account_id"`
+	Company               string `json:"company" example:"Biglytics"`
+	Createdate            string `json:"createdate" example:"2019-10-30T03:30:17.883"`
+	Email                 string `json:"email" example:"bcooper@biglytics.net"`
+	Firstname             string `json:"firstname" example:"Bryan"`
+	Lastname              string `json:"lastname" example:"Cooper"`
+	Lastmodifieddate      string `json:"lastmodifieddate" example:"2019-12-07T16:50:06.678Z"`
+	Phone                 string `json:"phone" example:"(877) 929-0687"`
+	Website               string `json:"website" example:"biglytics.net"`
+	ClassinAccountId      string `json:"classin_account_id"`
+	ClassinAccount        string `json:"classin_account"`
+	ClassinVirtualAccount string `json:"classin_virtual_account"`
+	ClassinPassword       string `json:"classin_password"`
+	ClassinAddDate        string `json:"classin_add_date"`
+	ClassinRemoveDate     string `json:"classin_remove_date"`
+	TypeOfUser            string `json:"type_of_user"`
 }
 
 // AssociatedCompany object
@@ -148,49 +154,62 @@ type ContactPaginationNext struct {
 // Get Contact
 func (c Contacts) Get(contactID string) (ContactsResponse, error) {
 	r := ContactsResponse{}
-	err := c.Client.Request("GET", "/crm/v3/objects/contacts/"+contactID, nil, &r)
+	params := []string{
+		"properties=firstname",
+		"properties=lastname",
+		"properties=email",
+		"properties=phone",
+		"properties=classin_account_id",
+		"properties=classin_account",
+		"properties=classin_virtual_account",
+		"properties=classin_password",
+		"properties=classin_add_date",
+		"properties=classin_remove_date",
+		"properties=type_of_user",
+	}
+	err := c.Client.Request("GET", "/crm/v3/objects/contacts/"+contactID, nil, &r, params)
 	return r, err
 }
 
 // Search a Contact
 func (c Contacts) Search(body SearchContactRequest) (SearchContactResponse, error) {
 	r := SearchContactResponse{}
-	err := c.Client.Request("POST", "/crm/v3/objects/contacts/search", body, &r)
+	err := c.Client.Request("POST", "/crm/v3/objects/contacts/search", body, &r, nil)
 	return r, err
 }
 
 // GetByEmail a Contact [deprecated]
 func (c Contacts) GetByEmail(email string) (ContactsResponse, error) {
 	r := ContactsResponse{}
-	err := c.Client.Request("GET", "/contacts/v1/contact/email/"+email+"/profile", nil, &r)
+	err := c.Client.Request("GET", "/contacts/v1/contact/email/"+email+"/profile", nil, &r, nil)
 	return r, err
 }
 
 // Create new Contact [deprecated]
 func (c Contacts) Create(data ContactsRequest) (ContactsResponse, error) {
 	r := ContactsResponse{}
-	err := c.Client.Request("POST", "/crm/v3/objects/contacts", data, &r)
+	err := c.Client.Request("POST", "/crm/v3/objects/contacts", data, &r, nil)
 	return r, err
 }
 
 // Update Contact
 func (c Contacts) Update(contactID string, data ContactsRequest) error {
-	return c.Client.Request("PATCH", "/crm/v3/objects/contacts/"+contactID, data, nil)
+	return c.Client.Request("PATCH", "/crm/v3/objects/contacts/"+contactID, data, nil, nil)
 }
 
 // UpdateByEmail a Contact [deprecated]
 func (c Contacts) UpdateByEmail(email string, data ContactsRequest) error {
-	return c.Client.Request("POST", "/contacts/v1/contact/email/"+email+"/profile", data, nil)
+	return c.Client.Request("POST", "/contacts/v1/contact/email/"+email+"/profile", data, nil, nil)
 }
 
 // CreateOrUpdate a Contact [deprecated]
 func (c Contacts) CreateOrUpdate(email string, data ContactsRequest) (CreateOrUpdateContactResponse, error) {
 	r := CreateOrUpdateContactResponse{}
-	err := c.Client.Request("POST", "/contacts/v1/contact/createOrUpdate/email/"+email, data, &r)
+	err := c.Client.Request("POST", "/contacts/v1/contact/createOrUpdate/email/"+email, data, &r, nil)
 	return r, err
 }
 
 // Delete Contact
 func (c Contacts) Delete(contactID string) error {
-	return c.Client.Request("DELETE", "/crm/v3/objects/contacts/"+contactID, nil, nil)
+	return c.Client.Request("DELETE", "/crm/v3/objects/contacts/"+contactID, nil, nil, nil)
 }

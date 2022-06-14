@@ -54,26 +54,26 @@ type ProductsPropertyResponse struct {
 // Get products
 func (l Products) Get(productId string) (ProductsResponse, error) {
 	r := ProductsResponse{}
-	err := l.Client.Request("GET", fmt.Sprintf("/crm/v3/objects/products/%v", productId), nil, &r)
+	err := l.Client.Request("GET", fmt.Sprintf("/crm/v3/objects/products/%v", productId), nil, &r, nil)
 	return r, err
 }
 
 // Create new products
 func (l Products) Create(data ProductsRequest) (ProductsResponse, error) {
 	r := ProductsResponse{}
-	err := l.Client.Request("POST", "/crm/v3/objects/products", data, &r)
+	err := l.Client.Request("POST", "/crm/v3/objects/products", data, &r, nil)
 	return r, err
 }
 
 // Update product
 func (l Products) Update(productId string, data ProductsRequest) (ProductsResponse, error) {
 	r := ProductsResponse{}
-	err := l.Client.Request("PATCH", "/crm/v3/objects/products/"+productId, data, &r)
+	err := l.Client.Request("PATCH", "/crm/v3/objects/products/"+productId, data, &r, nil)
 	return r, err
 }
 
 // Delete product
 func (l Products) Delete(productId string) error {
-	err := l.Client.Request("DELETE", "/crm/v3/objects/products/"+productId, nil, nil)
+	err := l.Client.Request("DELETE", "/crm/v3/objects/products/"+productId, nil, nil, nil)
 	return err
 }

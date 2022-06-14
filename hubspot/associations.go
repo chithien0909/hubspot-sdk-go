@@ -1,23 +1,22 @@
 package hubspot
 
-// Association object
-type Association struct {
-	FromObjectID    int    `json:"fromObjectId"`
-	AssociationType string `json:"associationType"`
-	ToObjectID      int    `json:"toObjectId"`
-	Timestamp       int64  `json:"timestamp"`
-}
-
-// Associations object
 type Associations struct {
-	AssociatedCompanyIds []int `json:"associatedCompanyIds,omitempty"`
-	AssociatedVids       []int `json:"associatedVids,omitempty"`
-	AssociatedDealIds    []int `json:"associatedDealIds,omitempty"`
+	LineItems AssociationsLineItems `json:"line items"`
+	Contacts  AssociationsLineItems `json:"contacts"`
 }
 
-// AssociationCreateFailure object
-type AssociationCreateFailure struct {
-	Association Association `json:"association"`
-	FailReason  string      `json:"failReason"`
-	Message     string      `json:"message"`
+type AssociationsLineItems struct {
+	Results []AssociationsLineItemsResult `json:"results"`
+}
+
+type AssociationsLineItemsResult struct {
+	Id   string `json:"id"`
+	Type string `json:"deal_to_line_item"`
+}
+type AssociationsContact struct {
+	Results []AssociationsContactResult `json:"results"`
+}
+type AssociationsContactResult struct {
+	Id   string `json:"id"`
+	Type string `json:"deal_to_line_item"`
 }

@@ -11,7 +11,8 @@ func TestDeals(t *testing.T) {
 			Amount:    "1500.00",
 			Closedate: "2019-12-07T16:50:06.678Z",
 			Dealname:  "Custom data integrations",
-			Pipeline:  "default",
+			//Dealstage: "presentationscheduled",
+			Pipeline: "default",
 		},
 	}
 	c := NewClient(NewClientConfig("", ""))
