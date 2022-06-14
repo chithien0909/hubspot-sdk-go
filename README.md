@@ -21,7 +21,7 @@ import (
 )
 
 func main() {
-	client := hubspot.NewClient(hubspot.NewClientConfig("https://api.hubapi.com", "12c3033c-718e-42ec-b68d-e88ae6ef5e29"))
+	client := hubspot.NewClient(hubspot.NewClientConfig("https://api.hubapi.com", "api-key"))
 
 	r, err := client.Deals().Get("dealId")
 	if err != nil {
